@@ -75,7 +75,17 @@ export interface LibraryItem {
   title: string;
   files: LibraryFile[];
   createdAt: number;
+  /** Omitted on the paginated list endpoint (can be several KB per item) -
+   * present when an item is fetched individually. Use hasPaper/questionCount
+   * for list rendering instead of checking this field's presence. */
   paper?: Paper;
+  hasPaper: boolean;
+  questionCount?: number;
+}
+
+export interface LibraryListResponse {
+  items: LibraryItem[];
+  nextCursor: string | null;
 }
 
 export interface LibraryFileLink {

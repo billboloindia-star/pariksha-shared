@@ -1,4 +1,4 @@
-import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, LibraryFileLink, LibraryItem, Paper, PerformanceInput, PracticePaperRequest } from "./types";
+import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, LibraryFileLink, LibraryItem, LibraryListResponse, Paper, PerformanceInput, PracticePaperRequest } from "./types";
 import { getStorage } from "./storage";
 
 export const SESSION_KEY = "pariksha_session";
@@ -86,8 +86,18 @@ export function analyzePerformance(input: PerformanceInput): Promise<AiReview> {
   return request<AiReview>("/analyze", { method: "POST", body: JSON.stringify(input) });
 }
 
-export function fetchLibrary(): Promise<LibraryItem[]> {
-  return request<LibraryItem[]>("/library");
+/** One bounded page of Paper Vault items (paper content omitted - see
+ * LibraryItem.hasPaper/questionCount). Pass the previous call's nextCursor
+ * to fetch the next page. */
+export function fetchLibrary(cursor?: string): Promise<LibraryListResponse> {
+  const qs = cursor ? `?cursor=${encodeURIComponent(cursor)}` : "";
+  return request<LibraryListResponse>(`/library${qs}`);
+}
+
+/** Fetches one item with its full paper (questions/options/answers) - call
+ * this when the user actually opens an item, not for list rendering. */
+export function fetchLibraryItem(itemId: string): Promise<LibraryItem> {
+  return request<LibraryItem>(`/library/${itemId}`);
 }
 
 export interface LibraryUploadFile { fileName: string; fileType: string; fileBase64: string }
