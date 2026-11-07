@@ -11,7 +11,7 @@ export function configureApi(apiUrl: string | undefined): void {
   API_URL = apiUrl;
 }
 
-export interface Session { token: string; email: string; plan?: "free" | "premium" }
+export interface Session { token: string; email: string; plan?: "free" | "premium"; name?: string | null; avatarUrl?: string | null }
 
 /** Gates the Master Vault question-bank feature — the one place both platforms
  * check it, so showing/hiding its UI never duplicates the plan logic. The
@@ -118,8 +118,25 @@ export function deleteLibraryItem(itemId: string): Promise<{ ok: boolean }> {
   return request<{ ok: boolean }>(`/library/${itemId}`, { method: "DELETE" });
 }
 
-export function me(): Promise<{ email: string; plan: "free" | "premium" }> {
-  return request<{ email: string; plan: "free" | "premium" }>("/me");
+export interface MeResponse { email: string; plan: "free" | "premium"; name?: string | null; avatarUrl?: string | null }
+
+export function me(): Promise<MeResponse> {
+  return request<MeResponse>("/me");
+}
+
+export function updateProfile(name: string): Promise<MeResponse> {
+  return request<MeResponse>("/me", { method: "PUT", body: JSON.stringify({ name }) });
+}
+
+export function uploadAvatar(fileBase64: string, fileType: string): Promise<MeResponse> {
+  return request<MeResponse>("/me/avatar", { method: "POST", body: JSON.stringify({ fileBase64, fileType }) });
+}
+
+export function changePassword(currentPassword: string, newPassword: string): Promise<{ ok: boolean }> {
+  return request<{ ok: boolean }>("/auth/change-password", {
+    method: "POST",
+    body: JSON.stringify({ currentPassword, newPassword }),
+  });
 }
 
 export interface BankQuestionInput {
