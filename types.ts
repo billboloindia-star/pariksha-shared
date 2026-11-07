@@ -306,6 +306,11 @@ export interface SectionConfidence {
    * inside the section to actually focus on, so this is the real signal it
    * uses to pick focusTopics within the section when present. */
   chapterAccuracy?: Record<string, number>;
+  /** Manual per-chapter self-rating, for a user who knows exactly where they
+   * stand and would rather say so directly than take the diagnostic quiz.
+   * Weaker signal than chapterAccuracy (a guess, not a measurement) but still
+   * finer-grained than the section-level `level` alone. */
+  chapterLevels?: Record<string, ConfidenceLevel>;
 }
 
 export interface TargetExamGenerateRequest {
