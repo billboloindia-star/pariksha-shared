@@ -297,7 +297,13 @@ export interface TargetExamGenerateRequest {
   stage: TargetExamStage;
   /** ISO date, "2026-12-19" */
   examDate: string;
+  /** Always the PERCENTAGE of totalMarks (0-100) - not every exam is out
+   * of 100 (RRB Prelims is out of 80, etc.), so the UI collects raw marks
+   * and converts before sending this. */
   targetCutoff: number;
+  /** Total marks for the exam/stage the user picked - purely for display
+   * ("62 / 80" instead of a bare, exam-agnostic "62%"). Defaults to 100. */
+  totalMarks: number;
 }
 
 export interface TargetExamAcceptRequest extends TargetExamGenerateRequest {
@@ -330,6 +336,7 @@ export interface TargetExamState {
   stage: TargetExamStage;
   examDate: string;
   targetCutoff: number;
+  totalMarks: number;
   createdAt: number;
   acceptedAt: number;
   plan: TargetExamPlan;
@@ -343,4 +350,16 @@ export interface TargetExamState {
   todayTasks: TargetExamTask[];
   calendar: CalendarDay[];
   missedDaysThisWeek: number;
+}
+
+/** AI-resolve fallback for a weak-topic name that didn't match any bank
+ * chapter via the deterministic findMatch() logic. `section`/`chapter` are
+ * set when a confident match was found (from cache or a fresh AI call,
+ * indicated by `source`); otherwise `candidates` holds 0-3 options for the
+ * user to pick from (zero means genuinely nothing fit). */
+export interface TopicResolveResponse {
+  section?: string;
+  chapter?: string;
+  source?: "cache" | "ai";
+  candidates: { section: string; chapter: string }[];
 }
