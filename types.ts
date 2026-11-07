@@ -205,6 +205,45 @@ export interface AiReview {
   plan: StudyPlanDay[];
 }
 
+export type Difficulty = "easy" | "medium" | "hard";
+
+/** One personally-tagged question in the Master Vault question bank — distinct
+ * from Question/Paper, which describe one fixed, ordered exam. A BankQuestion
+ * is independently filterable/browsable by section+chapter+difficulty and only
+ * becomes part of a Paper when a practice session is assembled from a batch of
+ * them (see api.ts's generatePracticePaper). */
+export interface BankQuestion {
+  questionId: string;
+  section: string;
+  chapter: string;
+  difficulty: Difficulty;
+  type: QType;
+  text: string;
+  table?: TableSpec;
+  image?: string;
+  solution?: string;
+  options?: string[];
+  answer_index?: number;
+  answer?: number;
+  createdAt: number;
+}
+
+export interface BankSectionSummary {
+  section: string;
+  chapter: string;
+  count: number;
+  byDifficulty: { easy: number; medium: number; hard: number };
+}
+
+export interface PracticePaperRequest {
+  section: string;
+  chapters: string[];
+  difficulty?: Difficulty;
+  count: number;
+  durationMinutes: number;
+  negativeMarking?: number;
+}
+
 export interface ExamSettings {
   monitorTabSwitches: boolean;
   /** Renders the exam inside a small fixed "monitor" box, scaled up, so you must

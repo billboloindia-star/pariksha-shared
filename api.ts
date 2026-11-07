@@ -1,4 +1,4 @@
-import type { AttemptRecord, AiReview, LibraryFileLink, LibraryItem, Paper, PerformanceInput } from "./types";
+import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, LibraryFileLink, LibraryItem, Paper, PerformanceInput, PracticePaperRequest } from "./types";
 import { getStorage } from "./storage";
 
 export const SESSION_KEY = "pariksha_session";
@@ -11,7 +11,15 @@ export function configureApi(apiUrl: string | undefined): void {
   API_URL = apiUrl;
 }
 
-export interface Session { token: string; email: string }
+export interface Session { token: string; email: string; plan?: "free" | "premium" }
+
+/** Gates the Master Vault question-bank feature — the one place both platforms
+ * check it, so showing/hiding its UI never duplicates the plan logic. The
+ * backend enforces this independently on every /bank/* route; this is only
+ * for deciding what to render. */
+export function canUseBankFeature(session: Session | null): boolean {
+  return session?.plan === "premium";
+}
 
 export function backendEnabled(): boolean {
   return Boolean(API_URL);
@@ -98,4 +106,41 @@ export function saveLibraryPaper(itemId: string, paper: Paper): Promise<LibraryI
 
 export function deleteLibraryItem(itemId: string): Promise<{ ok: boolean }> {
   return request<{ ok: boolean }>(`/library/${itemId}`, { method: "DELETE" });
+}
+
+export function me(): Promise<{ email: string; plan: "free" | "premium" }> {
+  return request<{ email: string; plan: "free" | "premium" }>("/me");
+}
+
+export interface BankQuestionInput {
+  section: string;
+  chapter: string;
+  difficulty: "easy" | "medium" | "hard";
+  type: "mc" | "num";
+  text: string;
+  options?: string[];
+  answer_index?: number;
+  answer?: number;
+  solution?: string;
+}
+
+export function ingestBankQuestions(questions: BankQuestionInput[]): Promise<{ ingested: number; errors: string[] }> {
+  return request<{ ingested: number; errors: string[] }>("/bank/ingest", {
+    method: "POST",
+    body: JSON.stringify({ questions }),
+  });
+}
+
+export function fetchBankSections(): Promise<BankSectionSummary[]> {
+  return request<BankSectionSummary[]>("/bank/sections");
+}
+
+export function fetchBankQuestions(section: string, chapters: string[], difficulty?: string): Promise<BankQuestion[]> {
+  const params = new URLSearchParams({ section, chapters: chapters.join(",") });
+  if (difficulty) params.set("difficulty", difficulty);
+  return request<BankQuestion[]>(`/bank/questions?${params.toString()}`);
+}
+
+export function generatePracticePaper(req: PracticePaperRequest): Promise<Paper> {
+  return request<Paper>("/bank/practice-paper", { method: "POST", body: JSON.stringify(req) });
 }
