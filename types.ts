@@ -293,7 +293,11 @@ export interface TopicContractChapter {
 
 export interface TopicContractBucket {
   label: string;
+  /** Full detail string - real-exam-weight nuance, shown as a tooltip, not inline prose. */
   weightNote: string;
+  /** Parsed representative question count for a clean "~24/40" badge. */
+  weightCount: number;
+  sectionTotal: number;
   chapters: TopicContractChapter[];
 }
 
