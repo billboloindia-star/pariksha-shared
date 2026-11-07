@@ -1,4 +1,4 @@
-import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, LibraryFileLink, LibraryItem, LibraryListResponse, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState } from "./types";
+import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, LibraryFileLink, LibraryItem, LibraryListResponse, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState, TopicResolveResponse } from "./types";
 import { getStorage } from "./storage";
 
 export const SESSION_KEY = "pariksha_session";
@@ -185,4 +185,18 @@ export function acceptTargetExamPlan(req: TargetExamAcceptRequest): Promise<Targ
  * and fall back to the setup wizard. */
 export function fetchTargetExam(): Promise<TargetExamState> {
   return request<TargetExamState>("/target-exam");
+}
+
+/** Last-resort fallback for a weak topic findMatch() couldn't place - tries
+ * a per-user cache before ever calling Gemini (see backend for the full
+ * tiering). May return a confident match, or 0-3 candidates to ask the user
+ * about. */
+export function resolveTopicChapter(topic: string): Promise<TopicResolveResponse> {
+  return request<TopicResolveResponse>("/bank/resolve-topic", { method: "POST", body: JSON.stringify({ topic }) });
+}
+
+/** Call once the user picks one of resolveTopicChapter's candidates - caches
+ * it so this exact topic resolves instantly (no AI) next time. */
+export function confirmTopicChapter(topic: string, section: string, chapter: string): Promise<{ ok: boolean }> {
+  return request<{ ok: boolean }>("/bank/confirm-topic", { method: "POST", body: JSON.stringify({ topic, section, chapter }) });
 }
