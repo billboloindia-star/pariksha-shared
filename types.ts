@@ -81,6 +81,10 @@ export interface LibraryItem {
   paper?: Paper;
   hasPaper: boolean;
   questionCount?: number;
+  /** A real render of the PDF's first page, generated asynchronously a few
+   * seconds after upload (not available instantly) - undefined until then,
+   * and for non-PDF uploads. */
+  thumbnailUrl?: string;
 }
 
 export interface LibraryListResponse {
