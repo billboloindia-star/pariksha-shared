@@ -286,10 +286,32 @@ export interface TargetExamPhase {
   endDay: number;
 }
 
+export interface TopicContractChapter {
+  chapter: string;
+  reason: string;
+}
+
+export interface TopicContractBucket {
+  label: string;
+  weightNote: string;
+  chapters: TopicContractChapter[];
+}
+
+export interface TopicContractSection {
+  section: string;
+  buckets: TopicContractBucket[];
+  unmatched: string[];
+}
+
 export interface TargetExamPlan {
   phases: TargetExamPhase[];
   focusDistribution: Record<string, number>;
   dailyHoursEstimate: number;
+  /** Deterministic chapter-allocation contract this plan was built around -
+   * real exam weightage + the student's own state decided these chapters
+   * server-side, before the AI ever ran. Empty for sections/exams it
+   * couldn't compute one for. */
+  topicContract: TopicContractSection[];
 }
 
 export type ConfidenceLevel = "very_low" | "average" | "excellent";
