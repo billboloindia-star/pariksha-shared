@@ -271,3 +271,76 @@ export interface ExamSettings {
    * candidate photo panel, keyboard-lock warning) instead of Pariksha's own skin. */
   examCenterSkin: boolean;
 }
+
+/** One of the predefined bank exams a user can track a study plan toward. */
+export type TargetExamName = "IBPS PO" | "SBI PO" | "IBPS Clerk" | "SBI Clerk" | "RRB PO" | "RRB Clerk";
+export type TargetExamStage = "prelims" | "mains" | "both";
+
+export interface TargetExamPhase {
+  label: string;
+  weeks: number;
+  description: string;
+  focusTopics: string[];
+  /** Day offsets from the plan's acceptedAt, filled in server-side from `weeks` */
+  startDay: number;
+  endDay: number;
+}
+
+export interface TargetExamPlan {
+  phases: TargetExamPhase[];
+  focusDistribution: Record<string, number>;
+  dailyHoursEstimate: number;
+}
+
+export interface TargetExamGenerateRequest {
+  exam: TargetExamName;
+  stage: TargetExamStage;
+  /** ISO date, "2026-12-19" */
+  examDate: string;
+  targetCutoff: number;
+}
+
+export interface TargetExamAcceptRequest extends TargetExamGenerateRequest {
+  plan: TargetExamPlan;
+}
+
+export interface AdaptiveLogEntry {
+  date: number;
+  message: string;
+  detail: string;
+  kind: "info" | "warning" | "good";
+}
+
+export interface TargetExamTask {
+  topic: string;
+  label: string;
+  meta: string;
+  done: boolean;
+}
+
+export interface CalendarDay {
+  /** "2026-11-07" */
+  date: string;
+  /** "0" none, "1"/"2"/"3" partial->full activity, "miss" a plan day with zero attempts */
+  level: "0" | "1" | "2" | "3" | "miss";
+}
+
+export interface TargetExamState {
+  exam: string;
+  stage: TargetExamStage;
+  examDate: string;
+  targetCutoff: number;
+  createdAt: number;
+  acceptedAt: number;
+  plan: TargetExamPlan;
+  adaptiveLog: AdaptiveLogEntry[];
+  daysLeft: number;
+  currentAvgAccuracy: number;
+  readiness: number;
+  readinessStatus: "ahead" | "on_track" | "behind";
+  streak: number;
+  currentPhaseIndex: number;
+  todayTasks: TargetExamTask[];
+  calendar: CalendarDay[];
+  missedDaysThisWeek: number;
+}

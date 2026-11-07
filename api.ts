@@ -1,4 +1,4 @@
-import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, LibraryFileLink, LibraryItem, LibraryListResponse, Paper, PerformanceInput, PracticePaperRequest } from "./types";
+import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, LibraryFileLink, LibraryItem, LibraryListResponse, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState } from "./types";
 import { getStorage } from "./storage";
 
 export const SESSION_KEY = "pariksha_session";
@@ -170,4 +170,19 @@ export function fetchBankQuestions(section: string, chapters: string[], difficul
 
 export function generatePracticePaper(req: PracticePaperRequest): Promise<Paper> {
   return request<Paper>("/bank/practice-paper", { method: "POST", body: JSON.stringify(req) });
+}
+
+/** Gemini-generated plan, NOT yet persisted - the review step before accept(). */
+export function generateTargetExamPlan(req: TargetExamGenerateRequest): Promise<TargetExamPlan> {
+  return request<TargetExamPlan>("/target-exam/generate", { method: "POST", body: JSON.stringify(req) });
+}
+
+export function acceptTargetExamPlan(req: TargetExamAcceptRequest): Promise<TargetExamState> {
+  return request<TargetExamState>("/target-exam/accept", { method: "POST", body: JSON.stringify(req) });
+}
+
+/** Throws (404) if the user has no active plan yet - callers should catch
+ * and fall back to the setup wizard. */
+export function fetchTargetExam(): Promise<TargetExamState> {
+  return request<TargetExamState>("/target-exam");
 }
