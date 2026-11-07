@@ -301,6 +301,11 @@ export interface SectionConfidence {
   section: string;
   level: ConfidenceLevel;
   diagnosticAccuracy?: number;
+  /** Per-chapter accuracy from the diagnostic quiz ("Simplification": 80, ...)
+   * - a section-level rating alone can't tell the planner WHICH chapters
+   * inside the section to actually focus on, so this is the real signal it
+   * uses to pick focusTopics within the section when present. */
+  chapterAccuracy?: Record<string, number>;
 }
 
 export interface TargetExamGenerateRequest {
