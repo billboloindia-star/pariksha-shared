@@ -292,6 +292,17 @@ export interface TargetExamPlan {
   dailyHoursEstimate: number;
 }
 
+export type ConfidenceLevel = "very_low" | "average" | "excellent";
+
+/** The user's starting point for one bank section, collected during Target
+ * Exam setup - either self-rated or measured via the optional inline
+ * diagnostic quiz (diagnosticAccuracy set), which the planner trusts more. */
+export interface SectionConfidence {
+  section: string;
+  level: ConfidenceLevel;
+  diagnosticAccuracy?: number;
+}
+
 export interface TargetExamGenerateRequest {
   exam: TargetExamName;
   stage: TargetExamStage;
@@ -304,6 +315,7 @@ export interface TargetExamGenerateRequest {
   /** Total marks for the exam/stage the user picked - purely for display
    * ("62 / 80" instead of a bare, exam-agnostic "62%"). Defaults to 100. */
   totalMarks: number;
+  sectionConfidence: SectionConfidence[];
 }
 
 export interface TargetExamAcceptRequest extends TargetExamGenerateRequest {
@@ -337,6 +349,7 @@ export interface TargetExamState {
   examDate: string;
   targetCutoff: number;
   totalMarks: number;
+  sectionConfidence: SectionConfidence[];
   createdAt: number;
   acceptedAt: number;
   plan: TargetExamPlan;
