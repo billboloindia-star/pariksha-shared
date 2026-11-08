@@ -1,4 +1,4 @@
-import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, Bookmark, BookmarkIn, LibraryFileLink, LibraryItem, LibraryListResponse, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState, TopicResolveResponse } from "./types";
+import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, BankSubConceptSummary, Bookmark, BookmarkIn, LibraryFileLink, LibraryItem, LibraryListResponse, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState, TopicResolveResponse } from "./types";
 import { getStorage } from "./storage";
 
 export const SESSION_KEY = "pariksha_session";
@@ -168,6 +168,7 @@ export function changePassword(currentPassword: string, newPassword: string): Pr
 export interface BankQuestionInput {
   section: string;
   chapter: string;
+  subConcept?: string;
   difficulty: "easy" | "medium" | "hard";
   type: "mc" | "num";
   text: string;
@@ -186,6 +187,11 @@ export function ingestBankQuestions(questions: BankQuestionInput[]): Promise<{ i
 
 export function fetchBankSections(): Promise<BankSectionSummary[]> {
   return request<BankSectionSummary[]>("/bank/sections");
+}
+
+export function fetchBankSubConcepts(section: string, chapter: string): Promise<BankSubConceptSummary[]> {
+  const params = new URLSearchParams({ section, chapter });
+  return request<BankSubConceptSummary[]>(`/bank/subconcepts?${params.toString()}`);
 }
 
 export function fetchBankQuestions(section: string, chapters: string[], difficulty?: string): Promise<BankQuestion[]> {

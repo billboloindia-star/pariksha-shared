@@ -26,6 +26,17 @@ export interface ConceptEntry {
   body: string;
 }
 
+/** A named slice of a chapter's theory - e.g. Time & Work's "Combined Work"
+ * vs "People Joining/Leaving Mid-Task". Lets a chapter be studied (and later
+ * practised) one sub-concept at a time instead of as one undifferentiated
+ * blob. `formula` supports the same literal `<br>` line-break convention as
+ * FormulaEntry.eq; `body` supports the same {{step:}}/{{b:}} inline markup. */
+export interface SubConceptNote {
+  name: string;
+  body: string;
+  formula?: string;
+}
+
 export interface ChapterEntry {
   group: ChapterGroup;
   label: string;
@@ -34,6 +45,10 @@ export interface ChapterEntry {
   concept?: ConceptEntry;
   formulas?: FormulaEntry[];
   example?: ExampleEntry;
+  /** Finer-grained theory breakdown, matching the sub-concept tags used to
+   * filter practice sessions in Master Vault for this chapter (where
+   * present). Optional - most chapters still just use concept/formulas. */
+  subConcepts?: SubConceptNote[];
 }
 
 /** Inline emphasis markup used in formula/example strings, platform-neutral
@@ -135,6 +150,52 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "A's efficiency = 36/12 = {{b:3/day}}, B's = 36/18 = {{b:2/day}}",
       "Together = 5 units/day → Time = 36/5 = {{b:7.2 days}}",
     ]},
+    subConcepts: [
+      {
+        name: "Efficiency-Based Problems",
+        body: "Efficiency is work done per unit time: if a job takes T days, efficiency = 1/T (taking total work = 1 unit). Since total work is fixed, time and efficiency are inversely proportional — whoever takes longer is less efficient.",
+        formula: "E × T = constant ⇒ T₁/T₂ = E₂/E₁<br>Quick ratio method: take the reciprocal of a time ratio, then clear fractions by multiplying through by their LCM — e.g. 20:30:60 → 1/20:1/30:1/60 → (×60) → 3:2:1",
+      },
+      {
+        name: "Combined Work Problems",
+        body: "Assume total work = LCM of the individual times so every efficiency comes out as a whole number — no fractions anywhere. Together-time = total work ÷ sum of efficiencies.",
+        formula: "Two workers (a, b days alone) together: ab/(a+b) days<br>Special case — both take x days alone: together = x/2. Three equal x-day workers: together = x/3.",
+      },
+      {
+        name: "People Joining/Leaving Problems",
+        body: "When workers join or leave partway through, split the timeline into segments, each with a fixed set of active workers. The sum of (efficiency × duration) across all segments must equal the total work.",
+        formula: "Σ (active efficiency × segment duration) = Total Work<br>\"Leaves n days before completion (time T)\" ⇒ that worker's contribution = efficiency × (T − n) — write this into the total-work equation and solve for T directly.",
+      },
+      {
+        name: "Alternate-Days Work Problems",
+        body: "When people work on alternate days, group the timeline into cycles (2-day cycles for two alternating workers, 3-day for three rotating) and find the work done per full cycle. Divide total work by work-per-cycle to get the number of complete cycles, then handle the leftover day separately with whoever's turn it is.",
+        formula: "Who starts on Day 1 decides whose turn the leftover day falls on — and can change the final answer, so always track it carefully.",
+      },
+      {
+        name: "Work and Wages Distribution Problems",
+        body: "Wages are proportional to work done = efficiency × time worked. If everyone works the same duration, wage ratio = efficiency ratio. If equally-efficient people work different durations, wage ratio = time ratio.",
+        formula: "General case: Wage ratio A:B:C = (E_A×T_A) : (E_B×T_B) : (E_C×T_C)<br>Reverse-wage problems: when two scenarios share a common pair of workers, that pair's wage ratio stays fixed across both scenarios — use it to transfer a known wage from one scenario to find an unknown in the other.",
+      },
+      {
+        name: "Men, Women and Children Efficiency Problems",
+        body: "When a problem states that some number of men/women/children complete the same job in given times, equate the total work in each case to get an efficiency ratio (e.g. one man's efficiency vs one woman's). Chain multiple such statements to build a combined M:W:C ratio, then use it to solve any mixed-group combination.",
+        formula: "n₁ × M × d₁ = n₂ × W × d₂  (same total work in both statements)",
+      },
+      {
+        name: "Men-Days-Hours and Workforce-Change Problems",
+        body: "The go-to formula whenever a question changes the number of workers, the number of days, AND the hours per day all at once (or asks a food/ration question in the same shape).",
+        formula: "M₁D₁H₁/W₁ = M₂D₂H₂/W₂<br>Drop the H terms if hours aren't mentioned. For ration/food-supply problems: M = number of people, W = amount of food.",
+      },
+      {
+        name: "Algebraic and Quadratic Time-Equation Problems",
+        body: "\"A takes k more days than B; together they take d days.\" Let B's alone time = x, so A's = x+k, then solve the resulting quadratic for x and reject the negative root.",
+        formula: "x(x+k) / (2x+k) = d<br>√ab shortcut: if (A+B) together take x days, A alone takes (x+a) days and B alone takes (x+b) days, then x = √(ab).",
+      },
+      {
+        name: "Miscellaneous Questions",
+        body: "Mixed questions that combine two or more of the ideas above — e.g. a percentage/fractional-work statement feeding into a combined-work or wages calculation. If p% of a job is done in d days, the whole job takes d×100/p (or d×n/m for a fraction m/n done in d days). If efficiency scales by a/b, time scales by the reciprocal b/a.",
+      },
+    ],
   },
 
   pipes: {

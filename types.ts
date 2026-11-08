@@ -256,6 +256,10 @@ export interface BankQuestion {
   questionId: string;
   section: string;
   chapter: string;
+  /** Finer-grained than chapter - e.g. chapter "Time & Work" might have
+   * sub-concepts like "Combined Work" or "People Joining/Leaving Mid-Task".
+   * Optional: older/un-tagged questions simply have no sub-concept filter. */
+  subConcept?: string;
   difficulty: Difficulty;
   type: QType;
   text: string;
@@ -275,9 +279,17 @@ export interface BankSectionSummary {
   byDifficulty: { easy: number; medium: number; hard: number };
 }
 
+export interface BankSubConceptSummary {
+  subConcept: string;
+  count: number;
+}
+
 export interface PracticePaperRequest {
   section: string;
   chapters: string[];
+  /** When set, only sample from these sub-concepts within the chosen
+   * chapters (chapters still required - this narrows further, not instead). */
+  subConcepts?: string[];
   difficulty?: Difficulty;
   count: number;
   durationMinutes: number;
