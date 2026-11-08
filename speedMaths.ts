@@ -11,10 +11,14 @@ export type SpeedMathType =
   | "fracToPct"
   | "pctToFrac"
   | "simplify"
-  | "approx";
+  | "approx"
+  | "table"
+  | "square"
+  | "cube";
 
 export const ALL_SPEED_MATH_TYPES: SpeedMathType[] = [
   "add", "subtract", "multiply", "divide", "fracToPct", "pctToFrac", "simplify", "approx",
+  "table", "square", "cube",
 ];
 
 export const SPEED_MATH_LABELS: Record<SpeedMathType, string> = {
@@ -26,6 +30,9 @@ export const SPEED_MATH_LABELS: Record<SpeedMathType, string> = {
   pctToFrac: "% → Fraction",
   simplify: "Simplification",
   approx: "Approximation",
+  table: "Tables (1-25)",
+  square: "Squares (1-50)",
+  cube: "Cubes (1-30)",
 };
 
 export interface SpeedMathQuestion {
@@ -235,6 +242,27 @@ function generateApprox(): SpeedMathQuestion {
   return { id: nextId(), type: "approx", prompt: `${fmt(pct)}% of ${base} ≈ ?`, answer, tolerance, display: fmt(Math.round(answer)) };
 }
 
+// --------------------------------------------------------- tables/squares/cubes
+
+function generateTable(): SpeedMathQuestion {
+  const a = randInt(1, 25);
+  const b = randInt(1, 10);
+  const answer = a * b;
+  return { id: nextId(), type: "table", prompt: `${a} × ${b} = ?`, answer, tolerance: 0, display: fmt(answer) };
+}
+
+function generateSquare(): SpeedMathQuestion {
+  const n = randInt(1, 50);
+  const answer = n * n;
+  return { id: nextId(), type: "square", prompt: `${n}² = ?`, answer, tolerance: 0, display: fmt(answer) };
+}
+
+function generateCube(): SpeedMathQuestion {
+  const n = randInt(1, 30);
+  const answer = n * n * n;
+  return { id: nextId(), type: "cube", prompt: `${n}³ = ?`, answer, tolerance: 0, display: fmt(answer) };
+}
+
 const GENERATORS: Record<SpeedMathType, () => SpeedMathQuestion> = {
   add: generateAdd,
   subtract: generateSubtract,
@@ -244,6 +272,9 @@ const GENERATORS: Record<SpeedMathType, () => SpeedMathQuestion> = {
   pctToFrac: generatePctToFrac,
   simplify: generateSimplify,
   approx: generateApprox,
+  table: generateTable,
+  square: generateSquare,
+  cube: generateCube,
 };
 
 /** Picks a random enabled type and generates one question for it. */
@@ -301,6 +332,22 @@ export interface SpeedMathSummary {
   totalTimeMs: number;
   avgTimeMs: number;
   byType: SpeedMathTypeBreakdown[];
+}
+
+// ---------------------------------------------------------- reference charts
+
+/** Full multiplication table for `n` (n x 1 through n x 10) - the raw
+ * memorization chart, not a quiz question. */
+export function getTableRow(n: number): { n: number; multiple: number; product: number }[] {
+  return Array.from({ length: 10 }, (_, i) => ({ n, multiple: i + 1, product: n * (i + 1) }));
+}
+
+export function getSquaresList(upTo = 50): { n: number; square: number }[] {
+  return Array.from({ length: upTo }, (_, i) => ({ n: i + 1, square: (i + 1) * (i + 1) }));
+}
+
+export function getCubesList(upTo = 30): { n: number; cube: number }[] {
+  return Array.from({ length: upTo }, (_, i) => ({ n: i + 1, cube: (i + 1) * (i + 1) * (i + 1) }));
 }
 
 export function summarizeSpeedMathSession(records: SpeedMathRecord[]): SpeedMathSummary {
