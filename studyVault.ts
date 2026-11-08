@@ -69,13 +69,84 @@ export function parseInlineMarkup(s: string): { text: string; kind: "plain" | "s
 }
 
 export const CHAPTER_ORDER = [
-  "speedmaths", "ratio", "percentage", "profitloss", "timework", "pipes", "sici", "average", "partnership", "mixture",
+  "speedmaths", "numbersystem", "simplification", "approximation", "ratio", "percentage", "profitloss", "timework",
+  "pipes", "sici", "average", "partnership", "mixture", "ages", "numberseries", "equations",
   "std", "trains", "boats", "mensuration2d", "mensuration3d",
 ] as const;
 export type ChapterKey = (typeof CHAPTER_ORDER)[number];
 
 export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
   speedmaths: { group: "A", label: "Speed Maths", isSpeedMaths: true },
+
+  numbersystem: {
+    group: "B", label: "Number System",
+    intro: "The building-block chapter underneath almost everything else — HCF/LCM, divisibility, remainders, cyclicity.",
+    concept: { title: "Prime factorization unlocks most of this chapter", body: "Writing a number as a^p × b^q × c^r (primes to powers) answers more questions at once than any other single step: number of factors = (p+1)(q+1)(r+1), HCF/LCM become product-of-common/all primes, and factorial trailing-zero counting all flow from the same idea." },
+    formulas: [
+      { n: "Number of factors", eq: "N = a^p × b^q × c^r ⇒ factors = (p+1)(q+1)(r+1)" },
+      { n: "HCF × LCM", eq: "HCF(a,b) × LCM(a,b) = a × b" },
+      { n: "Negative remainder", eq: "If a calculation gives remainder −R, the real remainder is (Divisor − R)" },
+      { n: "Trailing zeroes in x!", eq: "count factors of 5 in x! (count of 2s always exceeds count of 5s)" },
+    ],
+    example: { label: "Worked example", lines: [
+      "Number of factors of 360?",
+      "{{step:360 = 2³ × 3² × 5¹}}",
+      "Factors = (3+1)(2+1)(1+1) = 4×3×2 = {{b:24}}",
+    ]},
+    subConcepts: [
+      { name: "Classification of Numbers", body: "The smallest prime is 2 (the only even prime). 3 is the smallest odd prime, and 3,5,7 are the only three consecutive odd primes. 1 is neither prime nor composite. Every prime greater than 3 can be written as 6k±1." },
+      { name: "Prime Factorization and Number of Factors", body: "A prime raised to power n has exactly (n+1) factors — so every perfect square of a prime (25=5², 121=11², 361=19²) has exactly 3 factors. For N = aᵖ×bᵠ×cʳ with a=2 and b,c odd primes: Number of even factors = p(q+1)(r+1), odd factors = (q+1)(r+1)." },
+      { name: "Divisibility Rules", body: "By 4: last two digits form a number divisible by 4. By 8: last three digits divisible by 8. By 3: digit sum divisible by 3. By 9: digit sum divisible by 9. By 11: alternating digit-sum difference divisible by 11. By 6: divisible by both 2 and 3." },
+      { name: "HCF and LCM", body: "HCF = product of common primes at their LOWEST shared power; LCM = product of ALL primes at their HIGHEST power across both numbers. For fractions, LCM{a/b, p/q} = LCM(a,p)/HCF(b,q) and HCF uses the reverse pairing.", formula: "Division method for HCF of several numbers: divide all by a common factor repeatedly until co-prime; HCF = product of all common divisors used" },
+      { name: "Greatest Number Leaving the Same Remainder", body: "If a number leaves the same remainder r dividing N₁,N₂,N₃..., the required greatest number is HCF(N₁−r, N₂−r, N₃−r, ...). If it leaves DIFFERENT remainders, use HCF of the pairwise differences (Nᵢ−rᵢ) instead." },
+      { name: "Remainder Theorem", body: "Dividend = (Divisor×Quotient) + Remainder, where 0 ≤ Remainder < Divisor. If N÷d leaves remainder a, write N = dx+a for some integer x — this equation-form is the starting point for almost every remainder-chasing question." },
+      { name: "Cyclicity of Unit Digits", body: "The unit digit of a number raised to successive powers repeats in a cycle of (usually) 4: 2→2,4,8,6 ; 3→3,9,7,1 ; 7→7,9,3,1 ; 8→8,4,2,6. Divide the power by 4: if remainder r (1≤r≤3), the unit digit is the r-th term of that base's cycle; if exactly divisible by 4, it's the 4th (last) term." },
+      { name: "Factorial and Trailing Zeroes", body: "A trailing zero needs a 2 and a 5 together. In any factorial, factors of 2 vastly outnumber factors of 5, so the number of trailing zeroes is simply the count of factor 5 in x! (⌊x/5⌋+⌊x/25⌋+⌊x/125⌋+...)." },
+      { name: "Number Base Conversion", body: "A number with digits dₙdₙ₋₁...d₁d₀ in base b converts to decimal as dₙ×bⁿ + dₙ₋₁×bⁿ⁻¹ + ... + d₁×b + d₀ — each digit's place value is just a power of the base instead of a power of 10." },
+    ],
+  },
+
+  simplification: {
+    group: "B", label: "Simplification",
+    intro: "Order of operations, fractions, decimals, indices and surds — the mechanics every other chapter assumes you already have.",
+    concept: { title: "VBODMAS, not BODMAS", body: "Indian banking exams use VBODMAS — Vinculum (the bar over an expression) resolves even before Brackets. Missing the vinculum step is the single most common simplification error." },
+    formulas: [
+      { n: "Order of operations", eq: "Vinculum → Brackets → Of → Division → Multiplication → Addition → Subtraction" },
+      { n: "Laws of indices", eq: "aᵃ × aᵃ = aᵃ⁺ᵃ<br>aᵃ ÷ aᵃ = aᵃ⁻ᵃ<br>(aᵃ)ᵃ = aᵃˣᵃ<br>a⁻ⁱ = 1/aⁱ" },
+      { n: "Rationalising a surd", eq: "multiply numerator and denominator by the conjugate to clear the root from the denominator" },
+    ],
+    example: { label: "Worked example — VBODMAS", lines: [
+      "20 − [18 − {16 − (14 − 12÷6)}]",
+      "{{step:Innermost first: 12÷6=2 → 14−2=12}}",
+      "16−12=4 → 18−4=14 → 20−14 = {{b:6}}",
+    ]},
+    subConcepts: [
+      { name: "Fractions: Basics and Operations", body: "To add/subtract fractions, convert to a common denominator (the LCM of the denominators) first. To compare fractions quickly, cross-multiply rather than converting both to decimals." },
+      { name: "Decimals: Operations and Shortcuts", body: "Align decimal points before adding/subtracting. For multiplication, multiply as whole numbers first and place the decimal point by counting total decimal places across both factors." },
+      { name: "Percentage ↔ Fraction Conversion", body: "Memorising standard fraction-percentage pairs (halves through sixteenths) turns percentage arithmetic into fraction arithmetic — almost always faster than decimal multiplication. See the Percentage chapter's reference table." },
+      { name: "Indices (Laws of Exponents)", body: "When bases match, add exponents on multiplication and subtract on division. When the OUTER exponent applies to an already-exponentiated term, multiply the exponents. A negative exponent flips to a reciprocal: a⁻ⁱ = 1/aⁱ." },
+      { name: "Surds: Simplification Rules", body: "A surd is an irrational root like √2 or ∛5. Simplify by pulling out the largest perfect square/cube factor from under the root before combining with other surds — √50 = √(25×2) = 5√2, not left as √50." },
+      { name: "Rationalisation and Nested Radicals", body: "To remove a surd from a denominator, multiply numerator and denominator by its conjugate (for a+√b, the conjugate is a−√b) so the denominator becomes a difference of squares, eliminating the root." },
+    ],
+  },
+
+  approximation: {
+    group: "B", label: "Approximation",
+    intro: "Quickly estimate an answer close enough to pick the right multiple-choice option, without doing the exact calculation.",
+    concept: { title: "Round each number before you compute, not after", body: "Round every number in the expression to a convenient nearby value FIRST (nearest 10, 100, or a clean fraction), then do the arithmetic on the rounded numbers — this is almost always fast enough to separate the one close option from four distractors." },
+    formulas: [
+      { n: "Rounding rule", eq: "Round each term to the nearest convenient value (not necessarily nearest integer — nearest value that makes the arithmetic clean) before combining" },
+    ],
+    example: { label: "Worked example", lines: [
+      "48.7% of 601.2 + 29.9² ≈ ?",
+      "{{step:Round: 50% of 600 + 30²}}",
+      "= 300 + 900 = {{b:≈1200}} (the exact answer will be close to this)",
+    ]},
+    subConcepts: [
+      { name: "Approximation: Rounding Rules", body: "Round numbers to the nearest value that makes mental arithmetic clean — not always the mathematically-nearest integer. A number like 601.2 rounds to 600 (nearest convenient), not necessarily 601." },
+      { name: "Approximation in Arithmetic Operations", body: "Apply rounding consistently across every term in a multi-step expression (percentages, squares, roots, division) before combining them — rounding only some terms and not others introduces more error than it saves time." },
+    ],
+  },
 
   ratio: {
     group: "B", label: "Ratio & Proportion",
@@ -113,6 +184,19 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "{{step:Net% = 20 − 20 + (20×−20)/100}}",
       "= 0 − 4 = {{b:−4%}} (a net loss, not back to original)",
     ]},
+    subConcepts: [
+      { name: "Fraction ↔ Percentage Conversion", body: "Converting a percentage to its fraction form is almost always faster than computing it directly. Memorise 1/2=50%, 1/3=33.33%, 1/4=25%, 1/7=14.28%, 1/9=11.11%, 1/11=9.09%, 1/12=8.33%, and so on — then non-standard percentages break down using a known fraction as a stepping stone.", formula: "24% = 4%×6 = (1/25)×6 = 6/25<br>325% = 300%+25% = 3+¼ = 3¼" },
+      { name: "Percentage Increase/Decrease", body: "If a quantity changes by a fraction 1/n, Increase: Final = Initial×(n+1)/n. Decrease: Final = Initial×(n-1)/n. Equivalently, Initial:Final = n:(n+1) for an increase, n:(n-1) for a decrease — invert this ratio for reverse problems (finding the original value from the final one).", formula: "+16.67% (=1/6) ⇒ I:F = 6:7. If final = 105, I = 105×6/7 = 90" },
+      { name: "Comparative Percentages (More/Less Than)", body: "\"A is what % more/less than B\" — B is always the base and goes in the denominator, regardless of sentence order. Convert the two quantities to a ratio first; the required % is then simply (difference in ratio units)/(relevant ratio unit)×100.", formula: "A is what % more/less than B = (A-B)/B × 100" },
+      { name: "Successive Percentage Change", body: "Percentage changes applied one after another can't just be added — the base changes at every step. Either multiply through the fractions directly, or use the net-change formula.", formula: "Net% = x + y + (xy)/100 (use negative values for a decrease)" },
+      { name: "Percentage and Ratios", body: "If A:B = p:q, then A as a % of B is (p/q)×100. To merge two ratios A:B and B:C into one A:B:C, scale both so the shared term (B) matches in both before combining.", formula: "A:B=1:2, B:C=4:7 ⇒ scale first ratio ×2 ⇒ A:B=2:4 ⇒ A:B:C=2:4:7" },
+      { name: "Product Constancy (Price × Consumption)", body: "Price × Consumption = Expenditure. If expenditure is held constant across two situations, the ratio of price to consumption is reciprocal — a price rise means consumption must fall in exact proportion to keep spending the same." },
+      { name: "Income, Expenditure and Savings", body: "Income = Expenditure + Savings. If a known fraction of income is saved, convert to a ratio Income:Expenditure:Savings and scale using the given value. For multi-stage spending (x% on rent, then y% of what's left on food...), apply the successive-change method stage by stage." },
+      { name: "Pass Marks and Exam Percentage", body: "If a score at p₁% falls short of the pass mark by s₁, and a score at p₂% exceeds it by s₂ (p₁<p₂), the gap between the two percentages accounts for both shortfalls combined.", formula: "(p₂-p₁)% × Max Marks = s₁ + s₂" },
+      { name: "Commission", body: "Commission is a fee (often tiered/slab-based) paid on a transaction's value. For a tiered rate r₁ up to threshold T and r₂ beyond it: Total Commission = (T×r₁) + ((Total Sales−T)×r₂)." },
+      { name: "Population, Gender and Overlapping Percentages", body: "For two overlapping groups A and B within a population: %(at least one) = %(A) + %(B) − %(both) — the same Venn-diagram logic as counting, just applied to percentages of a fixed total." },
+      { name: "Election and Voting Percentages", body: "Always identify the correct base — is a given % out of total voters, votes cast, or valid votes? In a two-candidate election, if the winner gets w% of valid votes, the winning margin is (2w-100)% of valid votes (since the loser has (100-w)%)." },
+    ],
   },
 
   profitloss: {
@@ -131,6 +215,19 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "{{step:Net discount = 10+20−(10×20)/100 = 28%}}",
       "SP = 1000 × (100−28)/100 = {{b:720}}",
     ]},
+    subConcepts: [
+      { name: "Markup and Discount", body: "Markup is how much Marked Price exceeds Cost Price (base = CP). Discount is how much Marked Price is reduced to reach Selling Price (base = MP). Always keep track of which quantity is the base — mixing CP-based and MP-based percentages is the #1 error here.", formula: "Markup% = (MP-CP)/CP × 100<br>Discount% = (MP-SP)/MP × 100" },
+      { name: "Relationship Between Markup, Profit and Discount", body: "When there's no discount, MP = SP, so Markup = Profit exactly. When a discount is given and a profit still results: Markup = Profit + Discount (as rupee values — not percentages, since they have different bases)." },
+      { name: "CP:MP Ratio Formula", body: "Since SP = CP×(100+Profit%) = MP×(100-Discount%) in a profit case, this links all three percentages in one relation — useful whenever a question gives any two of {Profit%, Discount%, CP:MP} and asks for the third.", formula: "CP/MP = (100-Discount%)/(100+Profit%)   [profit case]<br>CP/MP = (100-Discount%)/(100-Loss%)   [loss case]" },
+      { name: "New SP for a Different Profit%", body: "If CP stays the same, two different SPs for two different profit/loss percentages are in direct ratio to (100 ± that %).", formula: "SP₁ : SP₂ = (100±x%) : (100±y%)   (+ for profit, − for loss)" },
+      { name: "Successive Discounts", body: "Chain successive discount ratios (MP:SP = 100:(100-d) for each) by multiplying them, or use the net-change formula directly — exactly the same shape as successive percentage change.", formula: "Net change% = x + y + (xy)/100 (use negative values for each discount)" },
+      { name: "Buy N, Get K Free", body: "Paying for N units but receiving N+K is mathematically identical to a discount scheme.", formula: "MP:SP = (N+K):N<br>Equivalent Discount% = K/(N+K) × 100" },
+      { name: "Two Articles at the Same Selling Price", body: "If two articles are sold at the same SP, one at profit/loss p₁% and the other at p₂% (loss as negative), their cost prices are in the ratio of the OTHER one's (100±%) term.", formula: "CP₁ : CP₂ = (100±p₂%) : (100±p₁%)" },
+      { name: "Dishonest Dealer: False Weight", body: "A dealer claiming to sell at cost price but giving less quantity than paid for (true:paid = a:b, a<b) is equivalent to a profit% exactly like treating this ratio as a discount/markup ratio. If a dealer also cheats by x% while buying, the two effects compound like two successive percentage increases." },
+      { name: "Chain Resale of an Article", body: "When an article is sold A→B and resold B→A, a useful shortcut: A's net profit on the round trip equals B's loss on the round trip (and vice versa), since the same item changed hands twice." },
+      { name: "Milk-Water Mixture (Adulteration)", body: "When free water is mixed into milk and the whole mixture sold at (or near) pure-milk price: Cost Price = cost of milk only (water contributes ₹0), while Selling Price is for the full (larger) mixture quantity — this gap is where the dealer's profit comes from." },
+      { name: "Wastage, Spoilage and Weighted Average", body: "When part of a stock is a total loss (-100%) and the rest sells at one or more profit/loss percentages, the overall % is simply the weighted average of all the individual percentages, weighted by each portion's share of the stock." },
+    ],
   },
 
   timework: {
@@ -214,6 +311,15 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "A fills {{b:+4/hr}}, B drains {{b:−3/hr}} → net {{b:+1/hr}}",
       "Time to fill = 24/1 = {{b:24 hours}}",
     ]},
+    subConcepts: [
+      { name: "Inlet Pipe Working Against a Leak", body: "A leak is just an outlet pipe (negative efficiency). Once filling and leak efficiencies are both known, net efficiency is their signed sum, and Time = Capacity ÷ Net efficiency. If the leak is active only part of the time, split into stages and solve stage by stage." },
+      { name: "Three or More Pipes Combined", body: "The efficiency-table method extends directly: LCM of all times = Total Capacity, assign ± efficiency to each pipe, sum them, divide. Given combined times of pairs (A+B), (B+C), (C+A), sum all three pair-efficiencies and halve to get (A+B+C), then subtract each opposite pair to isolate one pipe.", formula: "A+B+C = [(A+B)eff + (B+C)eff + (C+A)eff] / 2" },
+      { name: "Pipes Closed or Added Partway Through", body: "Whenever a pipe is opened, closed, or changes efficiency after some time, break the total time into stages. In each stage only the currently-active pipes contribute; carry the remaining work forward to the next stage." },
+      { name: "Efficiency Ratio Problems", body: "When a problem gives efficiency ratios instead of times (\"C is thrice as efficient as A\"), remember time and efficiency are inversely proportional — assign efficiency variables per the ratio and let time follow as 1/efficiency.", formula: "Time₁:Time₂ = Efficiency₂:Efficiency₁" },
+      { name: "Percentage Efficiency Change and Blockage", body: "If efficiency increases by p%, new time = old time ÷ (1+p/100); if it decreases by p%, new time = old time ÷ (1-p/100). A \"blockage\" problem is just a two-stage problem: reduced efficiency while blocked, full efficiency once cleared." },
+      { name: "Alternate Pipe Opening Problems", body: "Pipes opened one at a time in turns: find the net work done in one complete cycle, divide Total Capacity by work-per-cycle to get full cycles, then handle the leftover time with whichever pipe's turn it is." },
+      { name: "Multi-Level Tanks and Special Shortcuts", body: "Pipes fixed at different heights stop contributing once the water level passes them (e.g. a mid-level inlet stops once the tank is half full) — split into stages at each such point.", formula: "Special case: if A alone takes (x+a) hrs, B alone takes (x+b) hrs, together exactly x hrs, then x = √(ab)" },
+    ],
   },
 
   sici: {
@@ -232,6 +338,15 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "{{step:CI−SI = P×(R/100)² = 1000×0.01}}",
       "= {{b:10}} (check: SI=200, CI=210, diff=10 ✓)",
     ]},
+    subConcepts: [
+      { name: "The Ratio Method for Compound Interest", body: "Express R% as a fraction 1/a in lowest terms. For T years of compounding: Principal:Amount = aᵗ:(a+1)ᵗ. This avoids computing any actual amounts — e.g. 20% = 1/5, so 1-year ratio is 5:6, 2-year is 25:36.", formula: "P:A = aᵗ : (a+1)ᵗ" },
+      { name: "CI Compounded Half-Yearly, Quarterly", body: "For half-yearly compounding use rate R/2 per period over 2T periods; quarterly uses R/4 over 4T periods. For a fractional time like 1.5 years under annual compounding, compound fully for whole years at the full rate, then apply the proportionally scaled rate once more for the remaining fraction." },
+      { name: "Sum Becomes 'n' Times Itself", body: "Under SI, if a sum becomes n times itself, Total Interest = (n-1)×100% of Principal — directly gives the time once the rate is known (or vice versa)." },
+      { name: "Two-Equation Technique for SI", body: "Given Amounts A₁ at T₁ years and A₂ at T₂ years under SI, let I = one year's interest. Solving two linear equations gives I, then P, then the rate directly — no need to find P first.", formula: "I = (A₂-A₁)/(T₂-T₁), P = A₁ - T₁×I, Rate = I/P × 100" },
+      { name: "Ratio, Alligation and Split-Sum SI Problems", body: "For two sums at the same rate and time, P₁:P₂ = I₁:I₂ directly (rate and time cancel). When a sum is split across two different SI rates, find the overall effective % first, then split the sum via alligation between the two rates and the mean." },
+      { name: "Lending-Chain (Gain) Problems", body: "If A lends to B at R₁% and B re-lends the same sum to C at R₂% for the same time T, B's gain is simply the rate spread applied to the principal.", formula: "Gain = (R₂-R₁) × T % of Principal" },
+      { name: "Installments / Equated Annual Payments", body: "Debt = what would be owed at the end of the tenure if no installments were paid (principal grown by SI or CI for the full period). Under SI, each installment paid k years early grows by an extra Rk% of itself by the end. Under CI, the Principal equals the sum of the present values of all installments." },
+    ],
   },
 
   average: {
@@ -248,6 +363,14 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "{{step:Assume average = 48 → deviations: −6,−3,0,+3,+6}}",
       "Sum of deviations = 0 → average = 48 + 0/5 = {{b:48}}",
     ]},
+    subConcepts: [
+      { name: "Properties of Average", body: "If every value is changed by the same +k/−k, the average changes by exactly k too. If every value is multiplied or divided by k, the average scales by k too. If the SUM of n values changes by x (n unchanged), the average changes by x/n — the single most useful formula in this chapter, behind nearly every joining/leaving/replacement question." },
+      { name: "Weighted Average", body: "Combining groups of different sizes is NOT a simple average of their averages — it must be weighted by how many items each group contributes. Only the ratio of group sizes matters, not their exact counts (they cancel out).", formula: "A_overall = (n₁A₁ + n₂A₂) / (n₁+n₂)" },
+      { name: "Joining, Leaving & Replacement", body: "All \"someone joins/leaves/is replaced\" questions reduce to the change-in-sum idea. Special cases worth memorising: a new member joining exactly at the current average leaves the average unchanged; same if someone leaving was exactly at the average.", formula: "New Average = Old Average ± (Net change in Sum) / (New count)" },
+      { name: "Correction of Wrongly Recorded Values", body: "If a value was mistakenly recorded as W instead of the correct C, the sum used was off by (W−C) — subtract that effect, divided by n, to get the correct average.", formula: "Correct Average = Incorrect Average - (W-C)/n" },
+      { name: "Average of Consecutive/Evenly-Spaced Numbers", body: "For a list with a constant common difference (consecutive numbers, consecutive evens/odds, multiples), the average is simply the average of the first and last terms.", formula: "Count from m to n inclusive = (n-m)+1<br>Sum of first n naturals = n(n+1)/2; sum of first n squares = n(n+1)(2n+1)/6" },
+      { name: "Bowling Average", body: "A practical application: Bowling Average = Total Runs Conceded ÷ Total Wickets Taken. Unlike a batting average, LOWER is better here — but every joining/leaving/replacement technique above still applies unchanged." },
+    ],
   },
 
   partnership: {
@@ -263,6 +386,15 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "{{step:A: 5000×12=60000   B: 6000×8=48000}}",
       "Ratio = 60000:48000 = {{b:5:4}}",
     ]},
+    subConcepts: [
+      { name: "Working Backward: Investment or Time Ratio", body: "Since Profit ratio = Investment ratio × Time ratio, isolate either factor by dividing the profit ratio by the other known ratio.", formula: "Ratio of Time = (Ratio of Profit) / (Ratio of Investment)" },
+      { name: "Applying the Ratio to Actual Amounts", body: "Once the profit-sharing ratio a:b:c is known and total profit P is given, each partner's share = (their ratio term)/(a+b+c) × P — and this works in reverse too, from one known share back to the total." },
+      { name: "Partnership with Changing Capital", body: "When a partner withdraws or adds capital partway through, break their investment into time segments and sum (capital × duration) for each segment — this \"effective investment\" then compares directly against other partners' effective investments.", formula: "e.g. Rs 400 for 5 months then Rs 600 for 7 months = (400×5)+(600×7) = 6200 effective" },
+      { name: "Partnership with Fractional/Percentage Capital", body: "When a partner's contribution is given as a fraction of total capital for a fraction of the total duration, treat total capital and total duration each as 1 (or a convenient LCM) and compute that partner's effective share directly from the fractions given." },
+      { name: "Loss Sharing in Partnership", body: "A loss is divided in exactly the same Investment×Time ratio that a profit would have been — every variant (changing capital, fractional capital) carries over unchanged." },
+      { name: "Working Partner vs Sleeping Partner", body: "A working partner may get a salary/commission for managing the business, paid BEFORE the remaining profit is split by the investment-time ratio.", formula: "Profit available for ratio split = Total Profit - Salary/Commission to working partner" },
+      { name: "Successive Percentage Deductions Before Split", body: "When a fixed % (or fixed amount) of total profit is reserved first (management fee, charity, etc.) before dividing the rest by the usual ratio, deduct it first, then apply the investment-time ratio to what remains. For \"equalize the partners\" questions, set the unknown salary % as x and equate both partners' final amounts." },
+    ],
   },
 
   mixture: {
@@ -277,6 +409,90 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "{{step:(30−24) : (24−20) = 6 : 4}}",
       "= {{b:3 : 2}} (cheaper : dearer)",
     ]},
+    subConcepts: [
+      { name: "Finding an Unknown Quantity from a Changed Ratio", body: "When a pure quantity is added to or removed from one component and the new ratio is given, write the original quantities as ax, bx; add the known change to the right component and equate to the new ratio to solve for x." },
+      { name: "Removing Part & Mixing Equal-Ratio Mixtures", body: "Removing part of a mixture leaves the SAME ratio in both the removed portion and what's left — only the total quantity shrinks. Mixing two mixtures that are already in the same ratio a:b produces a:b again, regardless of how much of each is used." },
+      { name: "Replacement / Successive Dilution", body: "Repeatedly removing a fixed fraction f of a mixture and replacing it with another liquid, n times: the original liquid remaining follows a clean exponential decay.", formula: "Original liquid left = Q × (1-f)ⁿ" },
+      { name: "Mixing Multiple Ingredients & Alloys", body: "When several mixtures/alloys are combined at once, find the absolute quantity of each component from every source first, then add like components across all sources to get the final composition." },
+      { name: "Reverse Alligation", body: "If the mean value A and mixing ratio m:n are known but one extreme value is unknown, solve the alligation relation algebraically for the missing price.", formula: "(P₂-A):(A-P₁) = m:n" },
+      { name: "Alligation Applied to Profit and Loss", body: "Since Profit% is always based on Cost Price, applying alligation on profit/loss percentages (loss as negative) directly yields the cost-price ratio of two lots — never the selling-price ratio." },
+      { name: "Alligation Beyond Mixtures", body: "Alligation is just weighted averaging — it applies identically to average age, SI rate (weighted by principal), exam pass %, coin-value problems, anywhere a mean comes from combining two weighted groups. When combined values are given for overlapping pairs among three groups, alligate each pair and scale to a shared term to merge into one three-way ratio." },
+    ],
+  },
+
+  ages: {
+    group: "B", label: "Problems on Ages",
+    intro: "Every age question lives on one timeline — past, present, future — and one fact never changes: the gap between two people's ages.",
+    concept: { title: "The age gap never changes", body: "The difference between two people's ages stays constant forever — both people age by exactly the same number of years. This single fact is the backbone of almost every shortcut in this chapter: whenever two people's ages are compared at different times, their DIFFERENCE is the one thing you can always rely on." },
+    formulas: [
+      { n: "Ratio setup", eq: "Present ages in ratio a:b ⇒ write as ax, bx. Shift by the stated years, form the new ratio as an equation, cross-multiply, solve for x." },
+      { n: "Percentage → multiplier", eq: "\"k% less N years ago\" ⇒ (Present − N) = (1 − k/100) × Present" },
+      { n: "Doubling/tripling template", eq: "\"N₁ years from now, age = k × age N₂ years ago\" ⇒ x+N₁ = k(x−N₂)" },
+    ],
+    example: { label: "Worked example — constant age gap", lines: [
+      "Present ages ratio 5:6, gap = 1 unit. In 4 years ratio becomes 6:7 — find present ages",
+      "{{step:Gap stays constant in units ⇒ both ratios already have a difference of 1 unit}}",
+      "Scale so units match: 1 unit = 4 years ⇒ ages = {{b:20, 24}}",
+    ]},
+    subConcepts: [
+      { name: "Three-Person and Variable-Time Ratio Problems", body: "Express all three present ages in terms of one ratio variable (e.g. ax, bx, and a third defined by a stated gap from one of them), then apply the given future/past condition to form one equation in x." },
+      { name: "Percentage-Based Age Problems", body: "Convert every percentage statement into a fraction multiplier before setting up equations: 20% less → ×0.8, 33.33% less → ×2/3, 40% more → ×1.4. Once every condition is linear in the present age, solve normally." },
+      { name: "'Twice/Thrice as Old' (Doubling) Problems", body: "To find WHEN a person's age becomes k times their present age x, solve (x+t) = kx ⇒ t = (k-1)x for the number of years from now." },
+      { name: "Family and Average-Age Problems", body: "Since every member of a group ages by the same number of years, the SUM of n people's ages increases by n×(years elapsed) over that period — and so does n×(their average)." },
+      { name: "Crossing-Time Problems ('When You Were As Old As')", body: "For ages P₁>P₂ with gap g=P₁-P₂: Person 1's age g years ago was P₁-g = P₂ (the crossing point). Person 2's age at that same past moment was P₂-g = 2P₂-P₁ — use the question's exact wording to translate which of these it's asking for." },
+      { name: "Marriage / Milestone-Year Age Problems", body: "Some problems anchor ages to a life event (marriage, graduation) rather than to today. If age at Event A was a, and at Event B it was k% of a, the number of years between the two events is (k/100 − 1)×a." },
+    ],
+  },
+
+  numberseries: {
+    group: "B", label: "Number Series",
+    intro: "Spot the hidden rule linking consecutive terms — the same handful of pattern families cover almost every bank-exam series.",
+    concept: { title: "Check differences first, always", body: "Start every series by computing the simple difference between consecutive terms. Constant → it's an AP. Differences themselves changing by a constant → double difference. Differences forming 1,4,9,16 or 1,8,27,64 → square/cube-difference pattern. This one habit identifies most series within seconds." },
+    formulas: [
+      { n: "AP nth term", eq: "aₙ = a + (n-1)d" },
+      { n: "AP sum", eq: "Sₙ = (n/2)[2a+(n-1)d] = (n/2)(a+l)" },
+      { n: "GP nth term", eq: "aₙ = a×rⁿ⁻¹" },
+      { n: "GP sum to infinity", eq: "S∞ = a/(1-r)  (only valid for |r|<1)" },
+    ],
+    example: { label: "Worked example — pattern spotting", lines: [
+      "6, 7, 9, 12, 16, ?",
+      "{{step:Differences: +1, +2, +3, +4 → next difference +5}}",
+      "16+5 = {{b:21}}",
+    ]},
+    subConcepts: [
+      { name: "Difference-Based Patterns", body: "Beyond constant-difference (AP) and double-difference, watch for: alternating differences (+a,+b,+a,+b...), prime-number differences, square-number differences (1²,2²,3²...), cube-number differences, and alternating-sign square/cube differences." },
+      { name: "Multiplication & Division-Based Patterns", body: "Constant ratio = GP. Beyond that: variable ratio (×3,×4,×5...), consecutive-prime multipliers, consecutive-square multipliers, and percentage multipliers (each term = a stated % of the previous one, e.g. ×90%, ×80%, ×70%...)." },
+      { name: "Mixed-Operation Patterns", body: "Fixed \"×a±b\" repeated identically each step; changing \"×a±b\" where the add/subtract term itself follows an AP; alternating operations (multiply then divide, or add then multiply) in a repeating cycle; and digit-sum addition (next term = current + sum of its own digits) — easy to miss since the jumps look irregular at first." },
+      { name: "Formula-Based & Special Patterns", body: "Recognise on sight: n(n+1) → 2,6,12,20,30...; n³+n → 2,10,30,68...; Fibonacci-type (each term = sum of the two before it) → 2,3,5,8,13,21... — distinctive because it grows faster than any constant-ratio series yet each step is a simple sum." },
+      { name: "Wrong Number Series — Method", body: "Every term is shown, including one incorrect one. Find the pattern the MAJORITY of terms obey, then find the single term that breaks it. Usually only one term is wrong, and a single broken step tends to show up clearly at the beginning or end of the series rather than buried in the middle." },
+      { name: "Arithmetic Progression (AP)", body: "If x,y,z are three consecutive AP terms, y is the average of x and z. If the pth term is A and qth term is B, the common difference d = (A-B)/(p-q)." },
+      { name: "Geometric Progression (GP)", body: "Sum to infinity only converges when |r|<1 (a shrinking GP with a fractional common ratio) — for |r|≥1 the sum simply doesn't converge, and the question wouldn't ask for S∞." },
+    ],
+  },
+
+  equations: {
+    group: "B", label: "Linear, Quadratic & Cubic Equations",
+    intro: "From quadratic roots to the quantity-comparison format ('is x>y, x<y, or can't be determined?') that dominates bank-exam equation questions.",
+    concept: { title: "Splitting the middle term beats the formula when it's clean", body: "For ax²+bx+c=0: compute ac, find two numbers with that product summing to b, flip both signs, then divide each by a. This is faster than the quadratic formula whenever the roots are rational — reach for the formula only when splitting doesn't work cleanly." },
+    formulas: [
+      { n: "Sum & product of roots", eq: "Sum = −b/a,  Product = c/a" },
+      { n: "Quadratic formula", eq: "x = (−b ± √(b²−4ac)) / 2a", note: "D = b²−4ac is the discriminant." },
+      { n: "Discriminant sign", eq: "D>0: real, distinct roots. D=0: real, equal roots. D<0: imaginary roots." },
+      { n: "Cubic root relations", eq: "Sum = −b/a,  Σ(pairwise products) = c/a,  Product = −d/a" },
+    ],
+    example: { label: "Worked example — splitting the middle term", lines: [
+      "2x² − 11x + 15 = 0",
+      "{{step:ac = 30; need product 30, sum −11 → −6, −5}}",
+      "Flip signs (6,5), divide by a=2 → roots {{b:3, 2.5}}",
+    ]},
+    subConcepts: [
+      { name: "Degree and Number of Roots", body: "The degree (highest power of the variable) equals the number of roots: linear → 1 root, quadratic → 2 roots, cubic → 3 roots." },
+      { name: "Linear Equations in One and Two Variables", body: "A single linear equation in TWO variables has infinitely many solutions. To pin down n unknowns you need n independent equations. For a pair of equations, the elimination method scales coefficients so one variable cancels on adding/subtracting." },
+      { name: "Determining the Sign of the Roots", body: "For ax²+bx+c=0 with a>0: if c>0, both roots share a sign (both negative if b>0, both positive if b<0). If c<0, the roots have opposite signs — the numerically larger root takes the sign opposite to b." },
+      { name: "Comparing Two Quantities x and y", body: "Given roots of an x-equation and a y-equation, compare every root of x against every root of y to determine x>y, x<y, x≥y, x≤y, x=y, or 'cannot be determined'. If both equations give same-sign roots, the one with all-positive roots gives the larger quantity; if one equation gives opposite-sign roots, a relationship usually can't be pinned down without checking every root pair." },
+      { name: "Cubic Equations", body: "For ax³+bx²+cx+d=0 with roots m,n,p: Sum = −b/a, sum of pairwise products (mn+np+mp) = c/a, product (mnp) = −d/a. To build a cubic FROM given roots, substitute these three values into x³−(sum)x²+(pair-sum)x−(product)=0." },
+      { name: "Special Equation Forms — Surds, Fractions, Substitution", body: "Surd-coefficient quadratics (x²−8√2x+30=0): divide the constant by the surd's 'partner' to simplify into an ordinary quadratic, then reattach the surd to each root. Reciprocal equations (x+96/x=20): clear via LCM into a standard quadratic. Radical equations (x−3√x=0): substitute √x=a to convert into a quadratic in a, then square back — always check each root against the original domain." },
+    ],
   },
 
   std: {
@@ -295,6 +511,16 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "{{step:Speed = 90/2 = 45 km/h}}",
       "45 × 5/18 = {{b:12.5 m/s}}",
     ]},
+    subConcepts: [
+      { name: "Ratio Relationships (Speed, Time, Distance)", body: "Since Distance = Speed × Time, whenever one quantity is the same across two cases, the other two follow a simple rule: distance constant ⇒ speed ratio is the reciprocal of time ratio; time constant ⇒ distance ratio = speed ratio; speed constant ⇒ distance ratio = time ratio.", formula: "Speed changes in ratio p:q (fixed distance) ⇒ time changes in ratio q:p — a 25% speed increase (5:4) means time ratio 4:5, i.e. a 20% time decrease" },
+      { name: "Average Speed", body: "Average Speed = Total Distance ÷ Total Time — this is generally NOT the simple average of individual speeds. For equal-distance legs use the harmonic mean; for equal-TIME legs use the arithmetic mean.", formula: "Equal distance, 2 legs: Avg = 2S₁S₂/(S₁+S₂)<br>Equal time: Avg = (S₁+S₂)/2" },
+      { name: "Meeting-Point Shortcuts", body: "If a body alone covers a route in a hours and another (from the opposite end) in b hours, starting together they meet after a clean combined-rate formula. After crossing, the ratio of remaining times each needs relates to the speed ratio via a square root.", formula: "Time to meet = (a×b)/(a+b)<br>After crossing: V_P/V_Q = √(t_Q/t_P)" },
+      { name: "Trains: Crossing a Pole, Platform or Tunnel", body: "Crossing a point object (pole, person): the train covers its own length. Crossing an object with length (platform, tunnel): the train covers (its length + the object's length).", formula: "Time = Length(train [+ object]) / Speed" },
+      { name: "Trains: Crossing Each Other", body: "For two trains of lengths L₁,L₂ at speeds V₁,V₂: opposite directions use the sum of speeds, same direction (overtaking) uses the difference.", formula: "Opposite: Time=(L₁+L₂)/(V₁+V₂)<br>Same direction: Time=(L₁+L₂)/|V₁-V₂|" },
+      { name: "Races", body: "\"A beats B by d metres\" in a race of length L means: when A finishes L, B has covered only (L-d) — both ran for the same time, so their speed ratio equals the ratio of distances covered in that time. \"Giving a start of x m\" and finishing together means Speed ratio A:B = L:(L-x)." },
+      { name: "Circular Track Problems", body: "On a circular track of length C: opposite directions, bodies first meet when their combined distance covered = C; same direction, the faster one first 'laps' the slower when the relative distance covered = C.", formula: "Opposite: Time=C/(V₁+V₂). Same direction: Time=C/|V₁-V₂|" },
+      { name: "Escalators and Moving Walkways", body: "If a person's own speed is u and the escalator's speed is e: effective speed with the motion = u+e, against it = u-e. The number of steps a person personally climbs is NOT the total visible steps — it depends on time spent, which depends on the effective speed." },
+    ],
   },
 
   trains: {
@@ -329,6 +555,12 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "{{step:Boat = (16+8)/2 = 12 km/h}}",
       "Stream = (16−8)/2 = {{b:4 km/h}}",
     ]},
+    subConcepts: [
+      { name: "Finding V and S from Downstream/Upstream Speeds", body: "If Downstream speed D = V+S and Upstream speed U = V-S: add them and halve to get boat speed, subtract and halve to get stream speed.", formula: "V = (D+U)/2, S = (D-U)/2" },
+      { name: "Two Boats in the Same Stream", body: "The stream speed S always cancels out when comparing two boats in the same stream — so the difference between their downstream speeds, the difference between their upstream speeds, AND the difference between their still-water speeds are all equal." },
+      { name: "Relative Speed in Boats-and-Stream Problems", body: "Whenever relative speed between two boats (or a boat and a floating object) in the same stream is calculated, the stream speed S always cancels out of the result — same direction gives (V_A-V_B), opposite directions gives (V_A+V_B), regardless of S." },
+      { name: "Average Speed for a Round Trip", body: "For a round trip covering equal distances downstream (V₁) and upstream (V₂), the average speed is the harmonic mean — faster to use than solving the time equation directly.", formula: "Average Speed = 2V₁V₂/(V₁+V₂)" },
+    ],
   },
 
   mensuration2d: {
@@ -349,6 +581,12 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "{{step:Direct: ½×3×4 = 6}} (right triangle, legs 3 & 4)",
       "Heron's: s=6 → √(6×3×2×1) = √36 = {{b:6}} ✓ matches",
     ]},
+    subConcepts: [
+      { name: "Triangle Inequality and Classification", body: "The sum of any two sides of a triangle is always greater than the third. Scalene = all sides different, Isosceles = two sides equal, Equilateral = all sides and angles equal (each 60°)." },
+      { name: "Right-Angled and Equilateral Triangle", body: "Pythagoras: for a right angle with hypotenuse c, base b, height h: c² = b²+h². For an equilateral triangle of side a: Area = (√3/4)a², Height = (√3/2)a.", formula: "Triangles sharing the same height: Area₁/Area₂ = Base₁/Base₂ — useful when a triangle is split by a cevian or two triangles share a base line" },
+      { name: "Rhombus and Trapezium", body: "A rhombus's diagonals bisect each other at 90°, so its side can be found from the half-diagonals via Pythagoras.", formula: "Rhombus: Area = ½×D₁×D₂, side = √((D₁/2)²+(D₂/2)²)<br>Trapezium (parallel sides a,b, height h): Area = ½×h×(a+b)" },
+      { name: "Circle and Semicircle", body: "A semicircle's perimeter must include the diameter (not just the curved arc) unless the question says otherwise — a very common trap.", formula: "Semicircle: Area = πr²/2, Perimeter = πr+2r<br>Quadrant: Area = πr²/4, Boundary = ½πr+2r" },
+    ],
   },
 
   mensuration3d: {
@@ -368,6 +606,12 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
       "{{step:Volume = 22/7 × 49 × 10}}",
       "= {{b:1540}} (if melted into another shape, THIS number is what you equate to)",
     ]},
+    subConcepts: [
+      { name: "Hollow Cylinder", body: "For a hollow cylinder with outer radius R, inner radius r, height h: the volume of MATERIAL (not the hollow space) uses the difference of the two radii squared.", formula: "Volume of material = π(R²-r²)h<br>Total SA = 2π(R+r)h + 2π(R²-r²)" },
+      { name: "Cone and Frustum", body: "When a cone is cut parallel to its base, the smaller top cone is similar to the original — ratio of radii = ratio of heights. A frustum (the bottom piece left after removing the top cone) uses both radii R (larger) and r (smaller).", formula: "l² = h²+(R-r)² (frustum slant height)<br>Volume = ⅓πh(R²+r²+Rr)" },
+      { name: "Cutting a Solid Into n Equal Pieces", body: "If a cube of edge a is cut into n³ smaller cubes, each has edge a/n — and since volume is conserved but surface area scales per-piece, the COMBINED surface area of all the small cubes becomes n times the original (more total surface is exposed by the cuts)." },
+      { name: "Combined Solids (Toys, Composite Shapes)", body: "For composite solids (e.g. cone+hemisphere, cylinder+hemisphere), add up the volumes or surface areas of the individual parts — but don't double-count the flat circular face(s) where two solids are joined; those internal faces aren't part of the outer surface." },
+    ],
   },
 };
 
