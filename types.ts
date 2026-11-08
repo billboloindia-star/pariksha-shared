@@ -64,6 +64,32 @@ export interface Paper {
   questions: Question[];
 }
 
+/** A question starred while taking a mock or practice session (live, or
+ * from the post-exam Report review) - a standalone copy of the question so
+ * it survives independent of the source attempt, filed under its own
+ * section/chapter so the Bookmarks tab can group by chapter. */
+export interface BookmarkIn {
+  section: string;
+  topic: string;
+  type: QType;
+  text: string;
+  table?: TableSpec;
+  image?: string;
+  solution?: string;
+  options?: string[];
+  ans: number;
+  given?: number | null;
+  wasCorrect?: boolean | null;
+  sourceLabel: string;
+  sourceWhen?: number;
+}
+
+export interface Bookmark extends BookmarkIn {
+  bookmarkId: string;
+  note?: string;
+  createdAt: number;
+}
+
 export interface LibraryFile {
   fileName: string;
   fileType: string;

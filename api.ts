@@ -1,4 +1,4 @@
-import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, LibraryFileLink, LibraryItem, LibraryListResponse, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState, TopicResolveResponse } from "./types";
+import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, Bookmark, BookmarkIn, LibraryFileLink, LibraryItem, LibraryListResponse, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState, TopicResolveResponse } from "./types";
 import { getStorage } from "./storage";
 
 export const SESSION_KEY = "pariksha_session";
@@ -82,16 +82,42 @@ export function updateQuestionNote(when: number, qIndex: number, note: string): 
   });
 }
 
+export function addBookmark(b: BookmarkIn): Promise<Bookmark> {
+  return request<Bookmark>("/bookmarks", { method: "POST", body: JSON.stringify(b) });
+}
+
+export function fetchBookmarks(): Promise<Bookmark[]> {
+  return request<Bookmark[]>("/bookmarks");
+}
+
+export function updateBookmarkNote(bookmarkId: string, note: string): Promise<Bookmark> {
+  return request<Bookmark>(`/bookmarks/${bookmarkId}/note`, { method: "PATCH", body: JSON.stringify({ note }) });
+}
+
+export function removeBookmark(bookmarkId: string): Promise<{ ok: boolean }> {
+  return request<{ ok: boolean }>(`/bookmarks/${bookmarkId}`, { method: "DELETE" });
+}
+
+export function practiceBookmarks(bookmarkIds: string[]): Promise<Paper> {
+  return request<Paper>("/bookmarks/practice-paper", { method: "POST", body: JSON.stringify({ bookmarkIds }) });
+}
+
 export function analyzePerformance(input: PerformanceInput): Promise<AiReview> {
   return request<AiReview>("/analyze", { method: "POST", body: JSON.stringify(input) });
 }
 
 /** One bounded page of Paper Vault items (paper content omitted - see
  * LibraryItem.hasPaper/questionCount). Pass the previous call's nextCursor
- * to fetch the next page. */
-export function fetchLibrary(cursor?: string): Promise<LibraryListResponse> {
-  const qs = cursor ? `?cursor=${encodeURIComponent(cursor)}` : "";
-  return request<LibraryListResponse>(`/library${qs}`);
+ * to fetch the next page. `q`, when set, searches title/fileName across the
+ * WHOLE vault server-side (not just the currently loaded page) - keep
+ * passing the same `q` on subsequent Next-page calls to continue paging
+ * through matches. */
+export function fetchLibrary(cursor?: string, q?: string): Promise<LibraryListResponse> {
+  const params = new URLSearchParams();
+  if (cursor) params.set("cursor", cursor);
+  if (q) params.set("q", q);
+  const qs = params.toString();
+  return request<LibraryListResponse>(`/library${qs ? `?${qs}` : ""}`);
 }
 
 /** Fetches one item with its full paper (questions/options/answers) - call
