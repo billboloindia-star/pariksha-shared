@@ -316,6 +316,12 @@ export interface TargetExamPlan {
    * server-side, before the AI ever ran. Empty for sections/exams it
    * couldn't compute one for. */
   topicContract: TopicContractSection[];
+  /** Snapshot estimate at generation time, shown in the contract review
+   * before accepting - the dashboard recalculates the live version of both
+   * on every read (TargetExamState.todayProgress.overall.target and
+   * .recommendedMocksThisWeek) instead of trusting this. */
+  dailyQuestionTarget: number;
+  mocksPerWeek: number;
 }
 
 export type ConfidenceLevel = "very_low" | "average" | "excellent";
@@ -379,6 +385,45 @@ export interface CalendarDay {
   level: "0" | "1" | "2" | "3" | "miss";
 }
 
+/** Today's solved/accuracy/time against a daily question target, at
+ * whatever granularity (overall / a section / a topic) - built from every
+ * attempt logged today, mock or custom practice alike. */
+export interface QuestionProgress {
+  target: number;
+  solved: number;
+  correct: number;
+  accuracy: number;
+  remaining: number;
+  avgTimeSec: number;
+}
+
+export interface SectionQuestionProgress extends QuestionProgress {
+  section: string;
+}
+
+export interface TopicQuestionProgress extends QuestionProgress {
+  topic: string;
+  section: string;
+}
+
+export interface TodayProgress {
+  overall: QuestionProgress;
+  bySection: SectionQuestionProgress[];
+  byTopic: TopicQuestionProgress[];
+}
+
+/** Not a single-day number - how many questions you'd need to attempt per
+ * section, on average across recent attempts, to realistically hit your
+ * target cutoff at your own current accuracy there - versus what you're
+ * actually averaging. A volume check, separate from accuracy. */
+export interface SectionAttemptInsight {
+  section: string;
+  requiredAttempts: number;
+  avgAttempts: number;
+  isShort: boolean;
+  message?: string;
+}
+
 export interface TargetExamState {
   exam: string;
   stage: TargetExamStage;
@@ -399,6 +444,11 @@ export interface TargetExamState {
   todayTasks: TargetExamTask[];
   calendar: CalendarDay[];
   missedDaysThisWeek: number;
+  todayProgress: TodayProgress;
+  attemptConsistency: SectionAttemptInsight[];
+  /** Recalculated fresh on every read from the CURRENT days-left and pace -
+   * not the frozen generation-time snapshot on plan.mocksPerWeek. */
+  recommendedMocksThisWeek: number;
 }
 
 /** AI-resolve fallback for a weak-topic name that didn't match any bank
