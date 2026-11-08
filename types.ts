@@ -261,11 +261,17 @@ export interface BankQuestion {
    * Optional: older/un-tagged questions simply have no sub-concept filter. */
   subConcept?: string;
   difficulty: Difficulty;
-  type: QType;
+  /** "practice" is an ungraded browse-only type (no answer) for source
+   * material with no written answer key - never fed into a scored session,
+   * never counted by the normal /bank/sections totals (see `drill`). */
+  type: QType | "practice";
   text: string;
   table?: TableSpec;
   image?: string;
   solution?: string;
+  /** External worked-solution link (e.g. a video) - the usual pairing for
+   * a "practice" question, which has no written answer of its own. */
+  solutionLink?: string;
   options?: string[];
   answer_index?: number;
   answer?: number;

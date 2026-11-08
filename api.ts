@@ -170,12 +170,13 @@ export interface BankQuestionInput {
   chapter: string;
   subConcept?: string;
   difficulty: "easy" | "medium" | "hard";
-  type: "mc" | "num";
+  type: "mc" | "num" | "practice";
   text: string;
   options?: string[];
   answer_index?: number;
   answer?: number;
   solution?: string;
+  solutionLink?: string;
 }
 
 export function ingestBankQuestions(questions: BankQuestionInput[]): Promise<{ ingested: number; errors: string[] }> {
@@ -185,18 +186,23 @@ export function ingestBankQuestions(questions: BankQuestionInput[]): Promise<{ i
   });
 }
 
-export function fetchBankSections(): Promise<BankSectionSummary[]> {
-  return request<BankSectionSummary[]>("/bank/sections");
+/** `drill` selects the ungraded browse-only "practice" question pool
+ * instead of the normal scored bank (mc/num) - entirely separate counts,
+ * never mixed into a scored practice session. */
+export function fetchBankSections(drill?: boolean): Promise<BankSectionSummary[]> {
+  return request<BankSectionSummary[]>(`/bank/sections${drill ? "?drill=true" : ""}`);
 }
 
-export function fetchBankSubConcepts(section: string, chapters: string[]): Promise<BankSubConceptSummary[]> {
+export function fetchBankSubConcepts(section: string, chapters: string[], drill?: boolean): Promise<BankSubConceptSummary[]> {
   const params = new URLSearchParams({ section, chapters: chapters.join(",") });
+  if (drill) params.set("drill", "true");
   return request<BankSubConceptSummary[]>(`/bank/subconcepts?${params.toString()}`);
 }
 
-export function fetchBankQuestions(section: string, chapters: string[], difficulty?: string): Promise<BankQuestion[]> {
+export function fetchBankQuestions(section: string, chapters: string[], difficulty?: string, drill?: boolean): Promise<BankQuestion[]> {
   const params = new URLSearchParams({ section, chapters: chapters.join(",") });
   if (difficulty) params.set("difficulty", difficulty);
+  if (drill) params.set("drill", "true");
   return request<BankQuestion[]>(`/bank/questions?${params.toString()}`);
 }
 
