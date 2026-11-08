@@ -280,6 +280,7 @@ export interface BankSectionSummary {
 }
 
 export interface BankSubConceptSummary {
+  chapter: string;
   subConcept: string;
   count: number;
 }
@@ -287,8 +288,12 @@ export interface BankSubConceptSummary {
 export interface PracticePaperRequest {
   section: string;
   chapters: string[];
-  /** When set, only sample from these sub-concepts within the chosen
-   * chapters (chapters still required - this narrows further, not instead). */
+  /** When set, only sample questions matching one of these (chapter,
+   * subConcept) pairs within the chosen chapters. Each entry is encoded as
+   * "chapter|subConcept" - plain subConcept names repeat across chapters
+   * (e.g. every chapter has a "Miscellaneous Questions" group), so the pair
+   * is required to avoid matching the wrong chapter's identically-named
+   * sub-concept. */
   subConcepts?: string[];
   difficulty?: Difficulty;
   count: number;

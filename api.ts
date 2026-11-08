@@ -189,8 +189,8 @@ export function fetchBankSections(): Promise<BankSectionSummary[]> {
   return request<BankSectionSummary[]>("/bank/sections");
 }
 
-export function fetchBankSubConcepts(section: string, chapter: string): Promise<BankSubConceptSummary[]> {
-  const params = new URLSearchParams({ section, chapter });
+export function fetchBankSubConcepts(section: string, chapters: string[]): Promise<BankSubConceptSummary[]> {
+  const params = new URLSearchParams({ section, chapters: chapters.join(",") });
   return request<BankSubConceptSummary[]>(`/bank/subconcepts?${params.toString()}`);
 }
 
