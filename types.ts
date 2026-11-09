@@ -90,6 +90,33 @@ export interface Bookmark extends BookmarkIn {
   createdAt: number;
 }
 
+/** A selection rectangle on a source image, as fractions (0-1) of its
+ * width/height - resolution-independent of the actual source image size. */
+export interface CropBox {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+/** A user-cropped region of a Study Vault handwritten-notes page, saved as
+ * a personal reference with whatever topic metadata was on screen at the
+ * time (chapter, sub-concept where applicable), plus an optional note. */
+export interface NoteClipIn {
+  section: string;
+  chapter: string;
+  subConcept?: string;
+  sourceImageUrl: string;
+  cropBox: CropBox;
+  note?: string;
+}
+
+export interface NoteClip extends Omit<NoteClipIn, "cropBox"> {
+  clipId: string;
+  imageUrl: string;
+  createdAt: number;
+}
+
 export interface LibraryFile {
   fileName: string;
   fileType: string;

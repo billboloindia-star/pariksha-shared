@@ -1,4 +1,4 @@
-import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, BankSubConceptSummary, Bookmark, BookmarkIn, LibraryFileLink, LibraryItem, LibraryListResponse, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState, TopicResolveResponse } from "./types";
+import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, BankSubConceptSummary, Bookmark, BookmarkIn, LibraryFileLink, LibraryItem, LibraryListResponse, NoteClip, NoteClipIn, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState, TopicResolveResponse } from "./types";
 import { getStorage } from "./storage";
 
 export const SESSION_KEY = "pariksha_session";
@@ -100,6 +100,22 @@ export function removeBookmark(bookmarkId: string): Promise<{ ok: boolean }> {
 
 export function practiceBookmarks(bookmarkIds: string[]): Promise<Paper> {
   return request<Paper>("/bookmarks/practice-paper", { method: "POST", body: JSON.stringify({ bookmarkIds }) });
+}
+
+export function addNoteClip(c: NoteClipIn): Promise<NoteClip> {
+  return request<NoteClip>("/noteclips", { method: "POST", body: JSON.stringify(c) });
+}
+
+export function fetchNoteClips(): Promise<NoteClip[]> {
+  return request<NoteClip[]>("/noteclips");
+}
+
+export function updateNoteClipNote(clipId: string, note: string): Promise<NoteClip> {
+  return request<NoteClip>(`/noteclips/${clipId}/note`, { method: "PATCH", body: JSON.stringify({ note }) });
+}
+
+export function removeNoteClip(clipId: string): Promise<{ ok: boolean }> {
+  return request<{ ok: boolean }>(`/noteclips/${clipId}`, { method: "DELETE" });
 }
 
 export function analyzePerformance(input: PerformanceInput): Promise<AiReview> {
