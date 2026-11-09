@@ -35,6 +35,10 @@ export interface SubConceptNote {
   name: string;
   body: string;
   formula?: string;
+  /** Scanned pages from the teacher's handwritten classnotes PDF that cover
+   * this sub-concept, in reading order - lets a learner see the original
+   * worked-example pages behind the typed notes above. Public S3 URLs. */
+  notesPages?: string[];
 }
 
 export interface ChapterEntry {
@@ -252,45 +256,152 @@ export const CHAPTERS: Record<ChapterKey, ChapterEntry> = {
         name: "Efficiency-Based Problems",
         body: "Efficiency is work done per unit time: if a job takes T days, efficiency = 1/T (taking total work = 1 unit). Since total work is fixed, time and efficiency are inversely proportional — whoever takes longer is less efficient.",
         formula: "E × T = constant ⇒ T₁/T₂ = E₂/E₁<br>Quick ratio method: take the reciprocal of a time ratio, then clear fractions by multiplying through by their LCM — e.g. 20:30:60 → 1/20:1/30:1/60 → (×60) → 3:2:1",
+        notesPages: [
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/efficiency-based/p00.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/efficiency-based/p01.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/efficiency-based/p02.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/efficiency-based/p03.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/efficiency-based/p04.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/efficiency-based/p05.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/efficiency-based/p06.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/efficiency-based/p07.jpg",
+        ]
       },
       {
         name: "Combined Work Problems",
         body: "Assume total work = LCM of the individual times so every efficiency comes out as a whole number — no fractions anywhere. Together-time = total work ÷ sum of efficiencies.",
         formula: "Two workers (a, b days alone) together: ab/(a+b) days<br>Special case — both take x days alone: together = x/2. Three equal x-day workers: together = x/3.",
+        notesPages: [
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p00.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p01.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p02.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p03.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p04.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p05.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p06.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p07.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p08.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p09.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p10.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p11.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p12.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p13.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p14.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p15.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p16.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p17.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p18.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/combined-work/p19.jpg",
+        ]
       },
       {
         name: "People Joining/Leaving Problems",
         body: "When workers join or leave partway through, split the timeline into segments, each with a fixed set of active workers. The sum of (efficiency × duration) across all segments must equal the total work.",
         formula: "Σ (active efficiency × segment duration) = Total Work<br>\"Leaves n days before completion (time T)\" ⇒ that worker's contribution = efficiency × (T − n) — write this into the total-work equation and solve for T directly.",
+        notesPages: [
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/joining-leaving/p00.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/joining-leaving/p01.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/joining-leaving/p02.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/joining-leaving/p03.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/joining-leaving/p04.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/joining-leaving/p05.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/joining-leaving/p06.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/joining-leaving/p07.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/joining-leaving/p08.jpg",
+        ]
       },
       {
         name: "Alternate-Days Work Problems",
         body: "When people work on alternate days, group the timeline into cycles (2-day cycles for two alternating workers, 3-day for three rotating) and find the work done per full cycle. Divide total work by work-per-cycle to get the number of complete cycles, then handle the leftover day separately with whoever's turn it is.",
         formula: "Who starts on Day 1 decides whose turn the leftover day falls on — and can change the final answer, so always track it carefully.",
+        notesPages: [
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/alternate-days/p00.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/alternate-days/p01.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/alternate-days/p02.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/alternate-days/p03.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/alternate-days/p04.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/alternate-days/p05.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/alternate-days/p06.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/alternate-days/p07.jpg",
+        ]
       },
       {
         name: "Work and Wages Distribution Problems",
         body: "Wages are proportional to work done = efficiency × time worked. If everyone works the same duration, wage ratio = efficiency ratio. If equally-efficient people work different durations, wage ratio = time ratio.",
         formula: "General case: Wage ratio A:B:C = (E_A×T_A) : (E_B×T_B) : (E_C×T_C)<br>Reverse-wage problems: when two scenarios share a common pair of workers, that pair's wage ratio stays fixed across both scenarios — use it to transfer a known wage from one scenario to find an unknown in the other.",
+        notesPages: [
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/wages-distribution/p00.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/wages-distribution/p01.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/wages-distribution/p02.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/wages-distribution/p03.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/wages-distribution/p04.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/wages-distribution/p05.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/wages-distribution/p06.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/wages-distribution/p07.jpg",
+        ]
       },
       {
         name: "Men, Women and Children Efficiency Problems",
         body: "When a problem states that some number of men/women/children complete the same job in given times, equate the total work in each case to get an efficiency ratio (e.g. one man's efficiency vs one woman's). Chain multiple such statements to build a combined M:W:C ratio, then use it to solve any mixed-group combination.",
         formula: "n₁ × M × d₁ = n₂ × W × d₂  (same total work in both statements)",
+        notesPages: [
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/men-women-children/p00.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/men-women-children/p01.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/men-women-children/p02.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/men-women-children/p03.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/men-women-children/p04.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/men-women-children/p05.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/men-women-children/p06.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/men-women-children/p07.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/men-women-children/p08.jpg",
+        ]
       },
       {
         name: "Men-Days-Hours and Workforce-Change Problems",
         body: "The go-to formula whenever a question changes the number of workers, the number of days, AND the hours per day all at once (or asks a food/ration question in the same shape).",
         formula: "M₁D₁H₁/W₁ = M₂D₂H₂/W₂<br>Drop the H terms if hours aren't mentioned. For ration/food-supply problems: M = number of people, W = amount of food.",
+        notesPages: [
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p00.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p01.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p02.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p03.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p04.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p05.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p06.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p07.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p08.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p09.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/workforce-change/p10.jpg",
+        ]
       },
       {
         name: "Algebraic and Quadratic Time-Equation Problems",
         body: "\"A takes k more days than B; together they take d days.\" Let B's alone time = x, so A's = x+k, then solve the resulting quadratic for x and reject the negative root.",
         formula: "x(x+k) / (2x+k) = d<br>√ab shortcut: if (A+B) together take x days, A alone takes (x+a) days and B alone takes (x+b) days, then x = √(ab).",
+        notesPages: [
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/algebraic-quadratic/p00.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/algebraic-quadratic/p01.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/algebraic-quadratic/p02.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/algebraic-quadratic/p03.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/algebraic-quadratic/p04.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/algebraic-quadratic/p05.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/algebraic-quadratic/p06.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/algebraic-quadratic/p07.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/algebraic-quadratic/p08.jpg",
+        ]
       },
       {
         name: "Miscellaneous Questions",
         body: "Mixed questions that combine two or more of the ideas above — e.g. a percentage/fractional-work statement feeding into a combined-work or wages calculation. If p% of a job is done in d days, the whole job takes d×100/p (or d×n/m for a fraction m/n done in d days). If efficiency scales by a/b, time scales by the reciprocal b/a.",
+        notesPages: [
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/miscellaneous/p00.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/miscellaneous/p01.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/miscellaneous/p02.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/miscellaneous/p03.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/miscellaneous/p04.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/miscellaneous/p05.jpg",
+          "https://pariksha-bank-images-dev-950177941514.s3.ap-south-1.amazonaws.com/studynotes/timework/miscellaneous/p06.jpg",
+        ]
       },
     ],
   },
