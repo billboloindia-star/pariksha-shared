@@ -87,7 +87,19 @@ export interface BookmarkIn {
 export interface Bookmark extends BookmarkIn {
   bookmarkId: string;
   note?: string;
+  attachments?: Attachment[];
   createdAt: number;
+}
+
+/** An image or PDF attached to a note (review-answer note or bookmark
+ * note) - e.g. a photo of rough work. Uploaded as base64 to POST
+ * /attachments, which stores it in the public bank-images bucket under an
+ * unguessable key and returns this shape to embed in the note's record. */
+export interface Attachment {
+  url: string;
+  fileName: string;
+  fileType: string;
+  fileSize: number;
 }
 
 /** A selection rectangle on a source image, as fractions (0-1) of its
@@ -180,6 +192,7 @@ export interface AttemptQuestionRecord {
   given: number | null;
   timeMs: number;
   note?: string;
+  attachments?: Attachment[];
 }
 
 export interface AttemptRecord {

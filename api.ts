@@ -1,4 +1,4 @@
-import type { AttemptRecord, AiReview, BankQuestion, BankSectionSummary, BankSubConceptSummary, Bookmark, BookmarkIn, LibraryFileLink, LibraryItem, LibraryListResponse, NoteClip, NoteClipIn, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState, TopicResolveResponse } from "./types";
+import type { Attachment, AttemptRecord, AiReview, BankQuestion, BankSectionSummary, BankSubConceptSummary, Bookmark, BookmarkIn, LibraryFileLink, LibraryItem, LibraryListResponse, NoteClip, NoteClipIn, Paper, PerformanceInput, PracticePaperRequest, TargetExamAcceptRequest, TargetExamGenerateRequest, TargetExamPlan, TargetExamState, TopicResolveResponse } from "./types";
 import { getStorage } from "./storage";
 
 export const SESSION_KEY = "pariksha_session";
@@ -75,11 +75,46 @@ export function saveAttempt(rec: AttemptRecord): Promise<AttemptRecord> {
   return request<AttemptRecord>("/attempts", { method: "POST", body: JSON.stringify(rec) });
 }
 
-export function updateQuestionNote(when: number, qIndex: number, note: string): Promise<{ ok: boolean }> {
+export function updateQuestionNote(when: number, qIndex: number, note: string, attachments?: Attachment[]): Promise<{ ok: boolean }> {
   return request<{ ok: boolean }>(`/attempts/${when}/questions/${qIndex}/note`, {
     method: "PATCH",
-    body: JSON.stringify({ note }),
+    body: JSON.stringify({ note, attachments }),
   });
+}
+
+const MAX_ATTACHMENT_BYTES = 6 * 1024 * 1024;
+const ALLOWED_ATTACHMENT_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "application/pdf"]);
+
+function fileToBase64(file: File | Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      resolve(result.slice(result.indexOf(",") + 1));
+    };
+    reader.onerror = () => reject(reader.error ?? new Error("Could not read that file."));
+    reader.readAsDataURL(file);
+  });
+}
+
+/** Uploads an image or PDF a user attached to a note (web: a File from an
+ * <input>/drop; RN: an object shaped like one, since RN has no real File/Blob -
+ * see uploadAttachmentFromBase64 for that platform instead). */
+export async function uploadAttachment(file: File): Promise<Attachment> {
+  if (!ALLOWED_ATTACHMENT_TYPES.has(file.type)) throw new Error("Only images or PDFs can be attached.");
+  if (file.size > MAX_ATTACHMENT_BYTES) throw new Error("That file is too large to attach (max 6MB).");
+  const fileBase64 = await fileToBase64(file);
+  return request<Attachment>("/attachments", {
+    method: "POST",
+    body: JSON.stringify({ fileName: file.name, fileType: file.type, fileBase64 }),
+  });
+}
+
+/** Same upload, for platforms (React Native) that already have base64 content
+ * in hand rather than a browser File object. */
+export function uploadAttachmentFromBase64(fileName: string, fileType: string, fileBase64: string): Promise<Attachment> {
+  if (!ALLOWED_ATTACHMENT_TYPES.has(fileType)) throw new Error("Only images or PDFs can be attached.");
+  return request<Attachment>("/attachments", { method: "POST", body: JSON.stringify({ fileName, fileType, fileBase64 }) });
 }
 
 export function addBookmark(b: BookmarkIn): Promise<Bookmark> {
@@ -90,8 +125,8 @@ export function fetchBookmarks(): Promise<Bookmark[]> {
   return request<Bookmark[]>("/bookmarks");
 }
 
-export function updateBookmarkNote(bookmarkId: string, note: string): Promise<Bookmark> {
-  return request<Bookmark>(`/bookmarks/${bookmarkId}/note`, { method: "PATCH", body: JSON.stringify({ note }) });
+export function updateBookmarkNote(bookmarkId: string, note: string, attachments?: Attachment[]): Promise<Bookmark> {
+  return request<Bookmark>(`/bookmarks/${bookmarkId}/note`, { method: "PATCH", body: JSON.stringify({ note, attachments }) });
 }
 
 export function removeBookmark(bookmarkId: string): Promise<{ ok: boolean }> {
