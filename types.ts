@@ -193,6 +193,11 @@ export interface AttemptQuestionRecord {
   timeMs: number;
   note?: string;
   attachments?: Attachment[];
+  /** Absent on attempts saved before this field existed - the full
+   * question-review (solution/diagram) only renders these when present. */
+  solution?: string;
+  image?: string;
+  table?: TableSpec;
 }
 
 export interface AttemptRecord {
